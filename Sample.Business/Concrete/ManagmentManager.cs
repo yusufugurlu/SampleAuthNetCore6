@@ -17,14 +17,23 @@ namespace Sample.Business.Concrete
         private readonly IMapper _mapper;
         private readonly IGenericRepository<User> _userRepo;
         private readonly IGenericRepository<UserActivationEmailInformation> _userActivationRepo;
-
+        private readonly IGenericRepository<UserLoginResponseTimeStamp> _userLoginResponseTimeStampRepo;
         public ManagmentManager(IUnitOfWorks unitOfWorks, IMapper mapper)
         {
             _unitOfWorks = unitOfWorks;
             _mapper = mapper;
             _userRepo = unitOfWorks.GetGenericRepository<User>();
             _userActivationRepo = unitOfWorks.GetGenericRepository<UserActivationEmailInformation>();
+            _userLoginResponseTimeStampRepo = unitOfWorks.GetGenericRepository<UserLoginResponseTimeStamp>();
         }
+
+        public ServiceResult GetLoginRequestTimeStampAverrage()
+        {
+          var avverageRequest=  (from userLogin in _userLoginResponseTimeStampRepo.GetAll()
+                                             select userLogin.TimeStamp).Average();
+            return Result.Success(true, "", avverageRequest);
+        }
+
         public ServiceResult GetNewRegisterUserOneDay()
         {
          var registerUserCount=   _userRepo.GetAll(x => !x.IsDisabled && (x.RegistrationDate.HasValue ? (x.RegistrationDate.Value.Month == DateTime.Now.Month

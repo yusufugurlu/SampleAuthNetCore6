@@ -34,5 +34,12 @@ namespace Sample.WebAPI.Controllers
             var result = _managmentService.GetSendActivitionButNotUsedOneDay();
             return Ok(result);
         }
+
+        [HttpGet]
+        public IActionResult GetLoginRequestTimeStampAverrage()
+        {
+            var result = _managmentService.GetLoginRequestTimeStampAverrage();
+            return Ok(result);
+        }
     }
 }

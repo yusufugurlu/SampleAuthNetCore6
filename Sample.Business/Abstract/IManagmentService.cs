@@ -12,5 +12,6 @@ namespace Sample.Business.Abstract
         ServiceResult GetOnlineUser();
         ServiceResult GetNewRegisterUserOneDay();
         ServiceResult GetSendActivitionButNotUsedOneDay();
+        ServiceResult GetLoginRequestTimeStampAverrage();
     }
 }
