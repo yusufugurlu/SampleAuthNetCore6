@@ -52,7 +52,7 @@ namespace Sample.Business.Concrete
             {
                 AddUserActivatorMail(user);
                 var message = "Kullanıcı oluşturuldu. Sisteme giriş yapmak için e-postanıza gelen aktivasyon kodunu etkinleştiriniz.";
-                return Result.Success(true, message);
+                return Result.Success( message);
             }
             return result;
         }
@@ -98,14 +98,14 @@ namespace Sample.Business.Concrete
                     user.IsLogin = true;
                     _userRepo.Update(user);
                     _unitOfWorks.SaveChanges();
-                    return Result.Success(true, "", token);
+                    return Result.Success( "", token);
                 }
                 else
                 {
-                    return Result.Fail(false, "Emailinii aktive etmelisiniz.");
+                    return Result.Fail( "Emailinii aktive etmelisiniz.");
                 }
             }
-            return Result.Fail(false, "Kullanıcı bulunamadı.");
+            return Result.Fail( "Kullanıcı bulunamadı.");
         }
 
         public ServiceResult VerifyActivationMail(VerifyActivationMailViewModel verifyActivationMailView)
@@ -123,15 +123,15 @@ namespace Sample.Business.Concrete
                     userActivation.UsedDate = DateTime.Now;
                     _userActivationRepo.Update(userActivation);
                     _unitOfWorks.SaveChanges();
-                    return Result.Success(true, "Aktivasyon edildi.");
+                    return Result.Success( "Aktivasyon edildi.");
                 }
                 else
                 {
-                    return Result.Fail(false, "Kod geçerlilik süresi doldu");
+                    return Result.Fail( "Kod geçerlilik süresi doldu");
                 }
             }
 
-            return Result.Fail(false, "Kod geçersiz");
+            return Result.Fail( "Kod geçersiz");
             throw new NotImplementedException();
         }
     }

@@ -36,13 +36,13 @@ namespace Sample.Common.Result
 
     public static class Result
     {
-        public static ServiceResult Success(bool success = false, string message = "", object data = null)
+        public static ServiceResult Success( string message = "", object data = null)
         {
-            return new ServiceResult(success, message, data);
+            return new ServiceResult(true, message, data);
         }
-        public static ServiceResult Fail(bool success = false, string message = "", object data = null)
+        public static ServiceResult Fail( string message = "", object data = null)
         {
-            return new ServiceResult(success, message, data);
+            return new ServiceResult(false, message, data);
         }
 
     }

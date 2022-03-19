@@ -40,8 +40,6 @@ namespace Sample.Business.Operations.UserOperation
             if (result.IsSuccess)
             {
                 model.Data = result.Data;
-                model.HasData = true;
-
             }
             model.Message = result.Message;
             model.Status = result.Status();

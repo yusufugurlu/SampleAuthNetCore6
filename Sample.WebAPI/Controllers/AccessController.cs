@@ -3,6 +3,7 @@ using Sample.Business.Abstract;
 using Sample.Business.Operations.UserOperation;
 using Sample.Models.UserViewModel.ViewModel;
 using Sample.Models.ViewModel.UserViewModel;
+using System.Net;
 
 namespace Sample.WebAPI.Controllers
 {
@@ -21,7 +22,12 @@ namespace Sample.WebAPI.Controllers
             AddUserOperation addUserOperation = new AddUserOperation(_accessService);
             addUserOperation.AddUserViewModel = model;
             var result = addUserOperation.Handle();
-            return Ok(result);
+            if (result.Status== (int)HttpStatusCode.OK)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
         }
 
         [HttpPost]
@@ -30,7 +36,11 @@ namespace Sample.WebAPI.Controllers
             LoginUserOperation addUserOperation = new LoginUserOperation(_accessService);
             addUserOperation.LoginUserViewModel = model;
             var result = addUserOperation.Handle();
-            return Ok(result);
+            if (result.Status == (int)HttpStatusCode.OK)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpPost]
@@ -39,7 +49,11 @@ namespace Sample.WebAPI.Controllers
             VerifyActivationMailOperation addUserOperation = new VerifyActivationMailOperation(_accessService);
             addUserOperation.VerifyActivationMailModel = model;
             var result = addUserOperation.Handle();
-            return Ok(result);
+            if (result.Status == (int)HttpStatusCode.OK)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }
 }

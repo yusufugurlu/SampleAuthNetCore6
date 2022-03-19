@@ -31,7 +31,7 @@ namespace Sample.Business.Concrete
         {
           var avverageRequest=  (from userLogin in _userLoginResponseTimeStampRepo.GetAll()
                                              select userLogin.TimeStamp).Average();
-            return Result.Success(true, "", avverageRequest);
+            return Result.Success( "", avverageRequest);
         }
 
         public ServiceResult GetNewRegisterUserOneDay()
@@ -41,21 +41,21 @@ namespace Sample.Business.Concrete
             && x.RegistrationDate.Value.Year == DateTime.Now.Year) : false
             )).Count();
 
-            return Result.Success(true,"", registerUserCount);
+            return Result.Success("", registerUserCount);
         }
 
         public ServiceResult GetOnlineUser()
         {
             var onlineUserCount = _userRepo.GetAll(x => !x.IsDisabled && x.IsLogin).Count();
 
-            return Result.Success(true, "", onlineUserCount);
+            return Result.Success("", onlineUserCount);
         }
 
         public ServiceResult GetSendActivitionButNotUsedOneDay()
         {
             var expiryActivationOneDay = _userActivationRepo.GetAll(x => !x.IsUsed && !x.IsDisabled && x.ExpiryDate > DateTime.Now.AddDays(1).Date).Count();
 
-            return Result.Success(true, "", expiryActivationOneDay);
+            return Result.Success( "", expiryActivationOneDay);
         }
     }
 }

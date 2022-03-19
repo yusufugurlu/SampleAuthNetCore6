@@ -38,13 +38,13 @@ namespace Sample.Business.Concrete
             {
                 var affected = _context.SaveChangesAsync().GetAwaiter().GetResult();
                 transaction.Commit();
-                return Result.Success(true, "İşlem başarılı", null);
+                return Result.Success( "İşlem başarılı", null);
             }
             catch (Exception)
             {
                 transaction.Rollback();
                 //logger
-                return Result.Fail(false, "İşlem sırasında hata oluştu", null);
+                return Result.Fail( "İşlem sırasında hata oluştu", null);
             }
         }
     }
