@@ -94,7 +94,7 @@ namespace Sample.Business.Concrete
 
         public ServiceResult VerifyActivationMail(VerifyActivationMailViewModel verifyActivationMailView)
         {
-            var userActivation = _userActivationRepo.GetAll(x => x.GuidKey == verifyActivationMailView.ActivacitonKey && !x.IsDisabled && !x.IsUsed && !x.User.IsActivationEmail).FirstOrDefault();
+            var userActivation = _userActivationRepo.GetAll(x => x.GuidKey == verifyActivationMailView.ActivacitonKey && !x.IsDisabled && !x.IsUsed && !x.User.IsActivationEmail).LastOrDefault();
             if (userActivation != null)
             {
                 if (userActivation.ExpiryDate >= DateTime.Now)
