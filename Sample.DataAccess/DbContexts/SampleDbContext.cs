@@ -28,5 +28,7 @@ namespace Sample.DataAccess.DbContexts
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserActivationEmailInformation> UserActivationEmailInformations { get; set; }
+        public DbSet<UserLoginResponseTimeStamp> UserLoginResponseTimeStamps { get; set; }
+        
     }
 }
