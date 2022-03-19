@@ -1,9 +1,9 @@
 # Implement user login and authentication feature
 
-#Used Design Pattern
-  UnitOfWorks
-  GenericRepository
+#Used Design Pattern<br/>
+  UnitOfWorks<br/>
+  GenericRepository<br/>
   
-#Used Database
+#Used Database<br/>
   Ms-SQL - Entity Framework Core
   
