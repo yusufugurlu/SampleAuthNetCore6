@@ -24,6 +24,7 @@ namespace Sample.DataAccess.DbContexts
             //Configuration yaptığımız classları burada tanımlanır.
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new UserActivationEmailInformationConfiguration());
+            modelBuilder.ApplyConfiguration(new UserLoginResponseTimeStampConfiguration());  
         }
 
         public DbSet<User> Users { get; set; }

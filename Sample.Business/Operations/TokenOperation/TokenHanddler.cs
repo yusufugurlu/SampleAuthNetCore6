@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace Sample.Business.Operations.TokenOperation
         {
             _config = config;
         }
-        public Token CreateAccessToken(User user)
+        public Token CreateAccessToken(User user, List<Claim> claims)
         {
             var token = new Token();
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Token:SecurityKey"]));
@@ -28,7 +29,8 @@ namespace Sample.Business.Operations.TokenOperation
                 audience: _config["Token:Audience"],
                 expires: token.Expiration,
                 notBefore: DateTime.Now,
-                signingCredentials: signingCredentials
+                signingCredentials: signingCredentials,
+                claims: claims          
            );
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             //Token üretiliyor

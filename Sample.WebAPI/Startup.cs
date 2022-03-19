@@ -26,12 +26,20 @@ namespace Sample.WebAPI
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
             #region Use Authentication
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            });
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
             {
+                opt.SaveToken = true;
+                opt.RequireHttpsMetadata = false;
                 opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    ValidateAudience = true,
-                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = builder.Configuration["Token:Issuer"],
@@ -67,13 +75,17 @@ namespace Sample.WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            #region Use Authentications
-            app.UseAuthentication();
-            #endregion
+
 
             #region Custom ExceptionMiddleware
             app.UseCustomException();
             #endregion
+
+            #region Use Authentications
+            app.UseAuthentication();
+            #endregion
+
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

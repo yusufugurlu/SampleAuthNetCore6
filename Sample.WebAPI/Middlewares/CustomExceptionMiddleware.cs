@@ -1,6 +1,8 @@
-﻿using Sample.Common.Result;
+﻿using Sample.Business.Abstract;
+using Sample.Common.Result;
 using System.Diagnostics;
 using System.Net;
+using System.Security.Claims;
 
 namespace Sample.WebAPI.Middlewares
 {
@@ -11,8 +13,9 @@ namespace Sample.WebAPI.Middlewares
         {
             _next = next;
         }
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IAccessService accessService)
         {
+            Stream originalBody = context.Response.Body;
             var watch = Stopwatch.StartNew();
             string message = "";
             if (context.Request.Method == "Get")
@@ -28,13 +31,46 @@ namespace Sample.WebAPI.Middlewares
             {
                 message += "\nQuery= " + context.Request.QueryString.Value;
             }
-
             try
             {
-                await _next.Invoke(context);
-                watch.Stop();
-                message += "\n[Response] " + context.Request.Method + " - " + context.Request.Path + " - Responsed " + context.Response.StatusCode + " in " + watch.Elapsed.TotalMilliseconds;
-                Debug.WriteLine(message);
+
+
+                using (var memStream = new MemoryStream())
+                {
+                    context.Response.Body = memStream;
+
+                    await _next(context);
+                    watch.Stop();
+                    memStream.Position = 0;
+                    string responseBody = new StreamReader(memStream).ReadToEnd();
+
+                    if (context.Request.Path == "/api/Access/Login")
+                    {
+                        string? userId =null;
+                        if (context.User.Identity.IsAuthenticated)
+                        {
+                            if (context.User.Identity is ClaimsIdentity identity)
+                            {
+                                userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                            }
+                        }
+
+                        if (userId != null || responseBody.IndexOf("accessToken") > -1)
+                        {
+                            accessService.AddLoginResponseTimeStamp(new DataAccess.Entities.UserLoginResponseTimeStamp
+                            {
+                                TimeStamp = watch.Elapsed.TotalSeconds,
+                                UserId = !string.IsNullOrEmpty(userId) ? int.Parse(userId) : null
+                            });
+                        }
+
+                    }
+                    message += "\n[Response] " + context.Request.Method + " - " + context.Request.Path + " - Responsed " + context.Response.StatusCode + " in " + watch.Elapsed.TotalMilliseconds;
+                    Debug.WriteLine(message);
+
+                    memStream.Position = 0;
+                    await memStream.CopyToAsync(originalBody);
+                }
             }
             catch (Exception ex)
             {

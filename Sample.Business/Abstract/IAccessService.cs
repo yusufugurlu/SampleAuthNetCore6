@@ -16,6 +16,7 @@ namespace Sample.Business.Abstract
         ServiceResult Login(LoginUserViewModel loginUserView);
         ServiceResult AddUserActivatorMail(User addUserView);
         ServiceResult VerifyActivationMail(VerifyActivationMailViewModel verifyActivationMailView);
+        void AddLoginResponseTimeStamp(UserLoginResponseTimeStamp userLoginResponseTimeStamp);
         
     }
 }

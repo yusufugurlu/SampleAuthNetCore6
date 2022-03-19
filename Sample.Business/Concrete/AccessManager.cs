@@ -12,6 +12,7 @@ using Sample.Models.ViewModel.UserViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,15 +24,24 @@ namespace Sample.Business.Concrete
         private readonly IMapper _mapper;
         private readonly IGenericRepository<User> _userRepo;
         private readonly IGenericRepository<UserActivationEmailInformation> _userActivationRepo;
+        private readonly IGenericRepository<UserLoginResponseTimeStamp> _userLoginResponseTimeStampRepo;
         private readonly IConfiguration _config;
         public AccessManager(IUnitOfWorks unitOfWorks, IMapper mapper, IConfiguration config)
         {
             _unitOfWorks = unitOfWorks;
             _mapper = mapper;
             _config = config;
-            _userRepo = unitOfWorks.GetGenericRepository<User>();
-            _userActivationRepo = unitOfWorks.GetGenericRepository<UserActivationEmailInformation>();
+            _userRepo = _unitOfWorks.GetGenericRepository<User>();
+            _userActivationRepo = _unitOfWorks.GetGenericRepository<UserActivationEmailInformation>();
+            _userLoginResponseTimeStampRepo = _unitOfWorks.GetGenericRepository<UserLoginResponseTimeStamp>();
         }
+
+        public void AddLoginResponseTimeStamp(UserLoginResponseTimeStamp userLoginResponseTimeStamp)
+        {
+            _userLoginResponseTimeStampRepo.Add(userLoginResponseTimeStamp);
+            _unitOfWorks.SaveChanges();
+        }
+
         public ServiceResult AddUser(AddUserViewModel addUserView)
         {
             var user = _mapper.Map<User>(addUserView);
@@ -75,8 +85,14 @@ namespace Sample.Business.Concrete
             {
                 if (user.IsActivationEmail)
                 {
+                    var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                };
+
                     TokenHanddler handler = new TokenHanddler(_config);
-                    Token token = handler.CreateAccessToken(user);
+                    Token token = handler.CreateAccessToken(user,authClaims);
                     user.RefreshToken = token.RefreshToken;
                     user.RefreshTokenExpiryDate = token.Expiration.AddMinutes(5);
                     user.IsLogin = true;
@@ -94,7 +110,7 @@ namespace Sample.Business.Concrete
 
         public ServiceResult VerifyActivationMail(VerifyActivationMailViewModel verifyActivationMailView)
         {
-            var userActivation = _userActivationRepo.GetAll(x => x.GuidKey == verifyActivationMailView.ActivacitonKey && !x.IsDisabled && !x.IsUsed && !x.User.IsActivationEmail).LastOrDefault();
+            var userActivation = _userActivationRepo.GetAll(x => x.GuidKey == verifyActivationMailView.ActivacitonKey && !x.IsDisabled && !x.IsUsed && !x.User.IsActivationEmail).OrderByDescending(x=>x.Id).FirstOrDefault();
             if (userActivation != null)
             {
                 if (userActivation.ExpiryDate >= DateTime.Now)

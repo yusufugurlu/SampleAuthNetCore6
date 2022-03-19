@@ -13,7 +13,7 @@ namespace Sample.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<UserActivationEmailInformation> builder)
         {
-            builder.HasOne(x => x.User).WithMany(p => p.UserActivationEmailInformation).HasForeignKey(x => x.UserId).HasConstraintName("FK_User_UserActivationEmailInformation_UserId");
+            builder.HasOne(x => x.User).WithMany(p => p.UserActivationEmailInformation).HasForeignKey(x => x.UserId).HasConstraintName("FK_User_UserActivationEmailInformations_UserId");
             builder.HasIndex(x => x.GuidKey).HasName("IX_UserActivationEmailInformation_GuidKey");
         }
     }

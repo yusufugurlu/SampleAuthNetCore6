@@ -11,6 +11,7 @@ namespace Sample.DataAccess.Entities
         public User()
         {
             UserActivationEmailInformation = new HashSet<UserActivationEmailInformation>();
+            UserLoginResponseTimeStamp=new HashSet<UserLoginResponseTimeStamp>();
         }
         public string Name { get; set; }
         public string SurName { get; set; }
@@ -22,5 +23,6 @@ namespace Sample.DataAccess.Entities
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryDate { get; set; }
         public IEnumerable<UserActivationEmailInformation> UserActivationEmailInformation { get; set; }
+        public IEnumerable<UserLoginResponseTimeStamp> UserLoginResponseTimeStamp { get; set; }
     }
 }
