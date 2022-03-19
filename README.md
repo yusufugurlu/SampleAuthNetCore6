@@ -1,5 +1,14 @@
 # Implement user login and authentication feature
+# Used IDE
+<br/>
+Visual studio 2022- .Net Framework 6
 
+
+# Used External Package
+<br/>
+  JWTBearer<br/>
+  AutoMapper<br/>
+  Fluent Validation<br/>
 # Used Design Pattern<br/>
   UnitOfWorks<br/>
   GenericRepository<br/>
