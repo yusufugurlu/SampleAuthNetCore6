@@ -9,6 +9,7 @@ using Sample.WebAPI.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 namespace Sample.WebAPI
 {
@@ -56,6 +57,7 @@ namespace Sample.WebAPI
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<SampleDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DebugConnection")));
 
+          
 
             #region AutoMapper
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -64,7 +66,14 @@ namespace Sample.WebAPI
             builder.Services.AddScoped<IUnitOfWorks, UnitOfWorks>();
             builder.Services.AddScoped<IAccessService, AccessManager>();
             builder.Services.AddScoped<IManagmentService, ManagmentManager>();
+            builder.Services.AddScoped<IRedisService, RedisManager>();
+            builder.Services.AddScoped<IBoookTypeService, BookTypeManager>();
+            builder.Services.AddScoped<IBookService, BookManager>();
 
+            builder.Services.AddStackExchangeRedisCache(action =>
+            {
+                action.Configuration = builder.Configuration["RedisConfiguration"];
+            });
 
         }
         private static void Configure(WebApplication app)
