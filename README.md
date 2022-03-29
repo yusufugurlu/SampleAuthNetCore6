@@ -1,7 +1,7 @@
 # Implement user login and authentication feature
 # Used IDE
 <br/>
-Visual studio 2022- .Net Framework 6
+Visual studio 2022- .Net 6
 
 # Used External Package
   JWTBearer<br/>
